@@ -5,7 +5,6 @@ import {
   TextField,
   Button,
   Checkbox,
-  Typography,
   List,
   ListItem,
   ListItemText,
@@ -20,7 +19,7 @@ export interface Todo {
 
 const todoListState = atom<Todo[]>({
   key: 'todoListState',
-  default: [],
+  default: JSON.parse(localStorage.getItem('todos') || '[]'),
 });
 
 const Container = styled('div')({
@@ -60,6 +59,10 @@ const TodoItem = styled(ListItem)<{ completed: boolean }>(({ completed }) => ({
 function TodoList() {
   const [todoList, setTodoList] = useRecoilState(todoListState);
   const [newTodoText, setNewTodoText] = React.useState('');
+
+  React.useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todoList));
+  }, [todoList]);
 
   const addTodo = () => {
     setTodoList([
